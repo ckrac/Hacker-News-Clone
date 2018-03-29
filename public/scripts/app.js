@@ -1,7 +1,7 @@
 const section = document.querySelector('section');
+const storyContainer = document.querySelector('#story-container');
 
 const allNewsUrl = "https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty"
-
 
 getNews = () => {
   return fetch(allNewsUrl)
@@ -55,22 +55,57 @@ storiesArr = (count, result) => {
   return stories
 }
 
+domain_from_url = (url) => {
+    let result;
+    let match;
+    if (match = url.match(/^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n\?\=]+)/im)) {
+        result = match[1]
+        if (match = result.match(/^[^\.]+\.(.+\..+)$/)) {
+            result = match[1]
+        }
+    }
+    return result
+}
+
 renderStory = (storyObj, i) => {
   getStory(storyObj).then((result) => {
     postedElapsed = timeDiff(result.time)
+
+    let domainUrl;
+    let match;
+    if (match = (result.url).match(/^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n\?\=]+)/im)) {
+        domainUrl = match[1]
+        if (match = domainUrl.match(/^[^\.]+\.(.+\..+)$/)) {
+            domainUrl = match[1]
+        }
+    }
+    // don't know why i get an error here (Paused on promise rejection: Cannot read property 'match' of undefined)
+    // const domainUrl = domain_from_url(result.url)
+
+    const storyUrl = `${result.url}`
+    const fromDomainUrl = `https://news.ycombinator.com/from?site=${domainUrl}`
+
     const byUrl = `https://news.ycombinator.com/user?id=${result.by}`
     const timeUrl = `https://news.ycombinator.com/item?id=${result.id}`
     const logInUrl = `https://news.ycombinator.com/hide?id=${result.id}&goto=news`
     const commentsUrl = `https://news.ycombinator.com/item?id=${result.id}`
     let p = createNode("p")
     let div = createNode("div")
-    p.innerHTML = `${i + 1}. ${result.title}`
-    div.innerHTML = `${result.score} points by <a href=${byUrl}>${result.by}</a>
-      <a href=${timeUrl}>${postedElapsed}</a>
-      | <a href=${logInUrl}>hide</a> |
-      <a href=${commentsUrl}>${result.descendants} comments</a>`
+    p.className += "top-story"
+    div.className += "bottom-story"
+    p.innerHTML = `<span class="top-story-index">${i + 1}.</span>
+      <a href="#"><img src="https://news.ycombinator.com/grayarrow2x.gif" class="votearrow"></a>
+      <a href=${storyUrl} class="top-story-title">${result.title}</a>
+      <span class="top-story-domain">(<a href=${fromDomainUrl}>${domainUrl}</a>)</span>`
+    div.innerHTML = `${result.score} points by
+      <span class="bottom-story-a">
+        <a href=${byUrl}>${result.by}</a>
+        <a href=${timeUrl}>${postedElapsed}</a>
+        | <a href=${logInUrl}>hide</a> |
+        <a href=${commentsUrl}>${result.descendants} comments</a>
+      </span>`
     append(p, div)
-    append(section, p)
+    append(storyContainer, p)
   })
 }
 
@@ -91,7 +126,7 @@ getNews().then((result) => {
       const newSet = storiesArr(count, result)
       count += 30;
       for (let i = 0; i < newSet.length; i++) {
-        renderStory(newSet[i], i + count)
+        renderStory(newSet[i], count + i)
       }
     }
   };
