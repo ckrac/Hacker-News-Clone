@@ -59,6 +59,7 @@
   text-decoration: none;
 }
 
+
 .top-story-domain a{
   font-size: 7pt;
   color: #828282;
@@ -68,6 +69,18 @@
   font-size: 7pt;
   color: #828282;
 }
+
+.top-story-domain a:link {
+  color: #828282;
+}
+
+.top-story-domain a:visited {
+  color: #828282;
+}
+
+
+
+
 
 .votearrow {
     width: 10px;
