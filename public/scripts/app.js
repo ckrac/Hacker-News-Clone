@@ -95,7 +95,7 @@ renderStory = (storyObj, i) => {
     div.className += "bottom-story"
     p.innerHTML = `<span class="top-story-index">${i + 1}.</span>
       <a href="#"><img src="https://news.ycombinator.com/grayarrow2x.gif" class="votearrow"></a>
-      <a href=${storyUrl} class="top-story-title">${result.title}</a>
+      <span class="top-story-title"><a href=${storyUrl}>${result.title}</a>
       <span class="top-story-domain">(<a href=${fromDomainUrl}>${domainUrl}</a>)</span>`
     div.innerHTML = `${result.score} points by
       <span class="bottom-story-a">

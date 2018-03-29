@@ -33,16 +33,6 @@
   text-decoration: none;
 }
 
-a:link {
-  color: #222222;
-}
-a:visited {
-  color: #222222;
-}
-a:hover {
-  color: #222222;
-}
-
 #story-container {
   background-color: #F7F7E9;
 }
@@ -50,10 +40,15 @@ a:hover {
 .top-story {
   font-family: Verdana, Geneva, sans-serif;
   font-size: 10pt;
+  padding-top: 5px;
 }
 
 .top-story-index {
   color: #828282;
+}
+
+.top-story-title a:link {
+  color: #222222;
 }
 
 .top-story-title a:visited {
@@ -99,6 +94,10 @@ a:hover {
 }
 .bottom-story-a a:link {
   color: #828282;
+}
+
+p {
+  margin: 0px;
 }
 
 
