@@ -4,8 +4,7 @@ A Hacker News clone built using vanilla javascript
 
 ## Screenshots
 
-!["HomePage"]()
-
+!["HomePage"](https://github.com/ckrac/Hacker-News-Clone/blob/master/docs/HackerClone.png?raw=true)
 
 ## Getting Started
 
