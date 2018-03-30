@@ -51,7 +51,7 @@ storiesArr = (count, result) => {
   let stories = result.filter((i, index) => (index >= count && index < count + 30))
   // why is this not affecting global var?
   count += 30;
-  console.log('from func', count)
+  // console.log('from func', count)
   return stories
 }
 
@@ -114,6 +114,7 @@ getNews().then((result) => {
   window.onscroll = function(ev) {
     if ((window.innerHeight + window.scrollY) >= document.body.scrollHeight) {
       // you're at the bottom of the page
+      console.log("hit bottom of the page")
       const newSet = storiesArr(count, result)
       for (let i = 0; i < newSet.length; i++) {
         renderStory(newSet[i], count + i)
