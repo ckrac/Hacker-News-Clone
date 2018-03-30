@@ -1,6 +1,4 @@
-const section = document.querySelector('section');
 const storyContainer = document.querySelector('#story-container');
-
 const allNewsUrl = "https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty"
 
 getNews = () => {
@@ -101,7 +99,6 @@ renderStory = (storyObj, i) => {
 }
 
 getNews().then((result) => {
-  console.log(result)
   let count = 0;
   // const firstSet = result.filter((i, index) => (index < 30))
   const firstSet = storiesArr(count, result)
@@ -114,7 +111,6 @@ getNews().then((result) => {
   window.onscroll = function(ev) {
     if ((window.innerHeight + window.scrollY) >= document.body.scrollHeight) {
       // you're at the bottom of the page
-      console.log("hit bottom of the page")
       const newSet = storiesArr(count, result)
       for (let i = 0; i < newSet.length; i++) {
         renderStory(newSet[i], count + i)
