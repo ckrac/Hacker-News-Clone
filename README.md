@@ -8,6 +8,8 @@ A Hacker News clone built using vanilla javascript
 
 ## Getting Started
 
+Visit the app on https://clark-hacker-news-clone.herokuapp.com/
+
 ## To Do
 
 -Order news in order
