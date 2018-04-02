@@ -11,17 +11,6 @@ getNews = () => {
     })
 }
 
-// getStory = (story) => {
-//   const storyUrl = `https://hacker-news.firebaseio.com/v0/item/${story}.json?print=pretty`
-//   return fetch(storyUrl)
-//     .then((resp) => {
-//       return resp.json()
-//     })
-//     .then((json) => {
-//       return json
-//     })
-// }
-
 createNode = (element) => {
   return document.createElement(element)
 }
@@ -49,55 +38,8 @@ storiesArr = (count, result) => {
   let stories = result.filter((i, index) => (index >= count && index < count + 30))
   // why is this not affecting global var?
   count += 30;
-  // console.log('from func', count)
   return stories
 }
-
-
-domain_from_url = (url) => {
-    let result;
-    let match;
-    if (match = url.match(/^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n\?\=]+)/im)) {
-        result = match[1]
-        if (match = result.match(/^[^\.]+\.(.+\..+)$/)) {
-            result = match[1]
-        }
-    }
-    return result
-}
-
-// renderStory = (storyObj, i, storiesToAppend) => {
-//   getStory(storyObj).then((result) => {
-//     postedElapsed = timeDiff(result.time)
-//     // don't know why i get an error here (Paused on promise rejection: Cannot read property 'match' of undefined)
-//     const domainUrl = domain_from_url(result.url)
-//     const storyUrl = `${result.url}`
-//     const fromDomainUrl = `https://news.ycombinator.com/from?site=${domainUrl}`
-
-//     const byUrl = `https://news.ycombinator.com/user?id=${result.by}`
-//     const timeUrl = `https://news.ycombinator.com/item?id=${result.id}`
-//     const logInUrl = `https://news.ycombinator.com/hide?id=${result.id}&goto=news`
-//     const commentsUrl = `https://news.ycombinator.com/item?id=${result.id}`
-//     let p = createNode("p")
-//     let div = createNode("div")
-//     p.className += "top-story"
-//     div.className += "bottom-story"
-//     p.innerHTML = `<span class="top-story-index">${i + 1}.</span>
-//       <a href="#"><img src="https://news.ycombinator.com/grayarrow2x.gif" class="votearrow"></a>
-//       <span class="top-story-title"><a href=${storyUrl}>${result.title}</a>
-//       <span class="top-story-domain" id="top-story-domain">(<a href=${fromDomainUrl}>${domainUrl}</a>)</span>`
-//     div.innerHTML = `${result.score} points by
-//       <span class="bottom-story-a">
-//         <a href=${byUrl}>${result.by}</a>
-//         <a href=${timeUrl}>${postedElapsed}</a>
-//         | <a href=${logInUrl}>hide</a> |
-//         <a href=${commentsUrl}>${result.descendants} comments</a>
-//       </span>`
-//     storiesToAppend.push({order: i, pElement: p, divElement: div})
-//     append(p, div)
-//     append(storyContainer, p)
-//   })
-// }
 
 generateUrls = (storiesArr) => {
   const storyUrls = storiesArr.map(story => `https://hacker-news.firebaseio.com/v0/item/${story}.json?print=pretty`)
@@ -142,7 +84,6 @@ extractRootDomain = (url) => {
   let domain = extractHostname(url),
       splitArr = domain.split('.'),
       arrLen = splitArr.length;
-
   //extracting the root domain here
   //if there is a subdomain
   if (arrLen > 2) {
@@ -165,8 +106,6 @@ renderStory = (result, i) => {
     }
     const storyUrl = `${result.url}`
     const fromDomainUrl = `https://news.ycombinator.com/from?site=${domainUrl}`
-        // const fromDomainUrl = `#`
-
     const byUrl = `https://news.ycombinator.com/user?id=${result.by}`
     const timeUrl = `https://news.ycombinator.com/item?id=${result.id}`
     const logInUrl = `https://news.ycombinator.com/hide?id=${result.id}&goto=news`
@@ -194,11 +133,9 @@ renderStory = (result, i) => {
         | <a href=${logInUrl}>hide</a> |
         <a href=${commentsUrl}>${result.descendants} comments</a>
       </span>`
-    // storiesToAppend.push({order: i, pElement: p, divElement: div})
     append(p, div)
     append(storyContainer, p)
 }
-
 
 getNews().then((result) => {
   let count = 0;
@@ -212,26 +149,23 @@ getNews().then((result) => {
 
   Promise.all(apiRequests).then((result) => {
     console.log("from promise",result)
-    console.log("0index", result[0])
     for (let i = 0; i < apiRequests.length; i++){
       renderStory(result[i], i)
     }
   })
 
-  // for (let i = 0; i < firstSet.length; i++){
-  //   renderStory(firstSet[i], i, storiesToAppend)
-  // }
-
-
-
   window.onscroll = function(ev) {
     if ((window.innerHeight + window.scrollY) >= document.body.scrollHeight) {
       // you're at the bottom of the page
       const newSet = storiesArr(count, result)
-      // for (let i = 0; i < newSet.length; i++) {
-      //   renderStory(newSet[i], count + i)
-      // }
-      count += 30;
+      const urlsNewSet = generateUrls(newSet)
+      const newApiRequests = getStories(urlsNewSet)
+      Promise.all(newApiRequests).then((result) => {
+        for (let i = 0; i < apiRequests.length; i++){
+          renderStory(result[i], i + count)
+        }
+        count += 30;
+      })
     }
   };
 })
