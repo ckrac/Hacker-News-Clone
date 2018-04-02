@@ -1,6 +1,6 @@
 # Hacker News Clone App
 
-A Hacker News clone built using vanilla javascript
+A Hacker News clone built using vanilla javascript and HackerNews API to load articles.
 
 ## Screenshots
 
